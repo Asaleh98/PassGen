@@ -1,18 +1,7 @@
-from password_package import password_module3
-from password_package import password_generator
-import getpass
+from password_package import constraints_class
+from password_package import generate_class
 import sqlite3
 from contextlib import closing
-
-"""
-Password Policy:
-
-- Password must be at least 8 characters long
-- Password must contain at least one upper case letter, and one lower case letter
-- Password must contain at least one integer
-- Password must contain at least one special character from [!_@$#*+-?~<^>|]
-
-"""
 
 print("Welcome to the password stength checker / generator!")
 
@@ -32,9 +21,6 @@ def user_input():
     birthdate = input("Please enter birthdate (yyyy): ")
     birthdate = int(birthdate)
 
-    print(f"Your name is {fname} {lname}")
-    print(f"Your birthdate is {birthdate}")
-
     confirmation = input("Are your details correct? (y/n): ")
     confirmation = confirmation.lower()
 
@@ -42,7 +28,7 @@ def user_input():
         return fname, lname, birthdate
 
     elif confirmation == 'n':
-        cont = input("Would you like to continue? (y/n): ")
+        cont = input("Would you like to retry? (y/n): ")
         cont = cont.lower()
 
         if cont == 'y':
@@ -50,67 +36,44 @@ def user_input():
         else:
             exit()
 
+def get_pass():
+     print("Password must be between 8 and 18 characters long")
+     print("Password must contain at least one upper case letter, and one lower case letter")
+     print("Password must contain at least one integer, and one special character from [!_@$#*+-?~|^]")
+     password = input("Please enter password: ")
+     return password
 
-try:
-
-    user_choice()
-
-    if choice == 1:
-        user_input()
-        password = password_module3.get_pass()
-        password = password_module3.password_constraints(password)
-        password = password_module3.password_username(password, fname, lname, birthdate)
-        password_valid = password_module3.common_passwords(password)
-        print(password_module3.password_strength(password_valid))
-        result = password_module3.password_strength(password_valid)
-    elif choice == 2:
-         password_generator.generate_password()
-    elif choice == 3:
-         pass
-    else:
+if __name__ == "__main__":
+    try:
         user_choice()
 
-    export_file = input("Would you like to export results to a text file? y/n: ")
-    export_file = export_file.lower()
+        if choice == 1:
+            user_input()
+            password = get_pass()
 
-    if export_file == "y":
-        file = open("result.txt", "w")
-        data = file.write(result)
-        file.close()
-        print("Results successfuly exported to a text file")
+            constraints_object = constraints_class.Constraints(fname, lname, birthdate, password)
+            result = str(constraints_object.strength_report())
+            result = result.replace(', ', '\n')
 
-    elif export_file == "n":
-        print("Goodbye!")
+        elif choice == 2:
+             generate_object = generate_class.Generate_password()
+             result = str(generate_object.generate_password())
+        elif choice == 3:
+             exit()
+        else:
+            user_choice()
 
-except Exception as e:
-    print("Error! Try again")
+        export_file = input("Would you like to export results to a text file? y/n: ")
+        export_file = export_file.lower()
 
+        if export_file == "y":
+            file = open("result.txt", "a+")
+            data = file.write('\n' + result + '\n')
+            file.close()
+            print("Results successfuly exported to a text file")
+        elif export_file == "n":
+            pass
 
-# user_choice()
-#
-# if choice == 1:
-#     user_input()
-#     password = password_module3.get_pass()
-#     password = password_module3.password_constraints(password)
-#     password = password_module3.password_username(password, fname, lname, birthdate)
-#     password_valid = password_module3.common_passwords(password)
-#     print(password_module3.password_strength(password_valid))
-#     result = password_module3.password_strength(password_valid)
-# elif choice == 2:
-#      password_generator.generate_password()
-# elif choice == 3:
-#      pass
-# else:
-#     user_choice()
-#
-# export_file = input("Would you like to export results to a text file? y/n: ")
-# export_file = export_file.lower()
-#
-# if export_file == "y":
-#     file = open("result.txt", "w")
-#     data = file.write(result)
-#     file.close()
-#     print("Results successfuly exported to a text file")
-#
-# elif export_file == "n":
-#     print("Goodbye!")
+    except Exception as e:
+        print(e)
+        print("Error! Try again")
