@@ -1,14 +1,4 @@
 
-"""
-Password Policy:
-
-- Password must be at least 8 characters long
-- Password must contain at least one upper case letter, and one lower case letter
-- Password must contain at least one integer
-- Password must contain at least one special character from [!_@$#*+-?~<^>|]
-
-"""
-
 class Constraints:
 
     def __init__(self, fname, lname, birthdate, password):

@@ -30,5 +30,5 @@ class Generate_password:
             password = password + x
 
 
-        print(f"Your generated password is: {password}")
-        return f"Your generated password is: {password}"
+        print(f"Your generated password is: {password} \n It is {len(password)} characters long \n It passes the password policy")
+        return f"Your generated password is: {password} \n It is {len(password)} characters long \n It contains numbers \n It contains a mix of upper and lower case letters \n It contains symbols \n It does not contain name or birthdate"
